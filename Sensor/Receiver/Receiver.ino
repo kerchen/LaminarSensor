@@ -27,7 +27,7 @@ void loop() {
         digitalWrite( 7, HIGH );
       else
         digitalWrite( 7, LOW );
-      delay(100);
+      delay(100);  // Should match delay in sensor sketch
   }
   else
   {

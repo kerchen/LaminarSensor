@@ -1,8 +1,10 @@
-int led = 13;
-int thresh = 60;
+
+// low_thresh determines the maximum analogRead() value that is
+// considered a low value.  In the absence of a connection,
+// the analog pins should be pulled high by largish (1 MOhm) resistors.
+int low_thresh = 60;
 int send_word = 0;
 
-// the setup routine runs once when you press reset:
 void setup() {            
   Serial.begin(9600);
   pinMode(5, OUTPUT);     
@@ -11,14 +13,19 @@ void setup() {
 
 }
 
-// the loop routine runs over and over again forever:
 void loop() {
   send_word = 0;
   
+  // Determine if each analog input has a path to
+  // ground via one of the other two analog inputs
+  // (which is temporarily set as an output so that
+  // it is at ground potential, allowing the pin that
+  // is being tested to be driven low-ish).
   pinMode( A0, INPUT );
   pinMode( A1, OUTPUT );
   pinMode( A2, OUTPUT );
-  if ( analogRead( 0 ) < thresh )
+  
+  if ( analogRead( 0 ) < low_thresh )
   {
     send_word = send_word | 1;
     digitalWrite( 5, HIGH );
@@ -30,7 +37,7 @@ void loop() {
   pinMode( A0, OUTPUT );
   pinMode( A1, INPUT );
   pinMode( A2, OUTPUT );
-  if ( analogRead( 1 ) < thresh )
+  if ( analogRead( 1 ) < low_thresh )
   {
     send_word = send_word | 2;
     digitalWrite( 6, HIGH );
@@ -41,7 +48,7 @@ void loop() {
   pinMode( A0, OUTPUT );
   pinMode( A1, OUTPUT );
   pinMode( A2, INPUT );
-  if ( analogRead( 2 ) < thresh )
+  if ( analogRead( 2 ) < low_thresh )
   {
     send_word = send_word | 4;
     digitalWrite( 7, HIGH );
@@ -50,6 +57,9 @@ void loop() {
     digitalWrite( 7, LOW );
     
   Serial.write( send_word );
-  delay(100);
+  
+  // Receiver should use the same delay so that it doesn't stall
+  // and cause all of the outputs to shut off.
+  delay(100);  
 }
 
