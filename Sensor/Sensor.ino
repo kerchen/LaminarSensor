@@ -60,6 +60,6 @@ void loop() {
   
   // Receiver should use the same delay so that it doesn't stall
   // and cause all of the outputs to shut off.
-  delay(100);  
+  delay(200);  
 }
 
