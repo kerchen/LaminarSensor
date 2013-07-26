@@ -16,6 +16,8 @@ int  IncomingData = 0;
 
 /// Number of milliseconds of no activity before going into demo mode
 unsigned long DemoStartTime = 60000;
+/// Indicates whether or not we're currently in demo mode.
+int DemoMode = 0;
 
 // The current valve state
 int  ValveState[ 3 ] = { 0, 0, 0 };
@@ -126,10 +128,15 @@ void loop()
     if ( millis() - LastInputTime > DemoStartTime )
     {
       digitalWrite( 13, HIGH );
+      if ( ! DemoMode )
+      {
+        DemoMode = 1;
+      }
     }
     else
     {
       digitalWrite( 13, LOW );
+      DemoMode = 0;
     }
   }
 }
